@@ -38,8 +38,7 @@ app.post("/mahasiswa", async (req, res) => {
     const { nama, jurusan } = req.body;
     const sql = "INSERT INTO mahasiswa (nama, jurusan) VALUES (?,?)";
     const [result] = await db.query(sql, [nama, jurusan]);
-    res.json(result);
-    console.log(result);
+    res.json({ message: "Berhasil menambah data", data: result });
   } catch (err) {
     console.error(err);
     res.status(500);
@@ -55,10 +54,25 @@ app.put("/mahasiswa/:id", async (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Mahasiswa tidak di temukan" });
     }
-    res.json(result);
+    res.json({ message: "Data berhasil di ubah", data: result });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "gagal update data" });
+  }
+});
+
+app.delete("/mahasiswa/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const sql = "DELETE from mahasiswa where id= ?";
+    const [result] = await db.query(sql, [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Mahasiswa tidak di temukan" });
+    }
+    res.json({ message: "Data berhasil di hapus", data: result });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "gagal menghapus data" });
   }
 });
 
